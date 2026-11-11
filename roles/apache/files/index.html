@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab Ansible</title>
+  <style>
+    :root {
+      --bg: #eef1f4;
+      --surface: #ffffff;
+      --text: #1d2733;
+      --muted: #5b6878;
+      --line: #d6dce3;
+      --ok: #1f8a4c;
+      --ok-soft: #e3f4ea;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #141a21;
+        --surface: #1c242d;
+        --text: #e6ebf0;
+        --muted: #9aa7b5;
+        --line: #2e3945;
+        --ok: #4cc27f;
+        --ok-soft: #1c3527;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+    }
+    main {
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 40px 36px 32px;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px 4px 10px;
+      border-radius: 999px;
+      background: var(--ok-soft);
+      color: var(--ok);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ok);
+    }
+    h1 {
+      margin: 20px 0 8px;
+      font-size: clamp(2.2rem, 7vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .lead { color: var(--muted); max-width: 40ch; }
+    dl {
+      margin-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+    dl div {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    dt { color: var(--muted); }
+    dd { font-weight: 600; text-align: right; }
+    footer {
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="status">Servidor configurado com sucesso</span>
+    <h1>Lab Ansible</h1>
+    <p class="lead">Esta página foi publicada automaticamente por um playbook Ansible, sem nenhuma configuração manual no servidor.</p>
+
+    <dl>
+      <div><dt>Servidor web</dt><dd>Apache</dd></div>
+      <div><dt>Sistema operacional</dt><dd>Linux</dd></div>
+      <div><dt>Automação</dt><dd>Ansible</dd></div>
+    </dl>
+
+    <footer>Laboratório de automação de infraestrutura com Ansible.</footer>
+  </main>
+</body>
+</html>

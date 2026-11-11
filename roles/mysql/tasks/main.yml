@@ -1,0 +1,59 @@
+---
+
+- name: Install MariaDb Server - RedHat
+  yum:
+    name:
+      - mariadb-server
+      - python3-PyMySQL
+    state: present
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: Install MySql Server - Debian
+  apt:
+    update_cache: yes
+    name:
+      - mariadb-server
+      - python3-pymysql
+    state: present
+  when: (ansible_facts['os_family'] == "Debian")
+
+- name: "Start MariaDb"
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Creating a database to used by WordPress - RedHat
+  mysql_db:
+    name: "{{ db_wp_name }}"
+    state: present
+    login_user: root
+    login_unix_socket: /var/lib/mysql/mysql.sock
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: Creating a database to used by WordPress - Debian
+  mysql_db:
+    login_unix_socket: "/var/run/mysqld/mysqld.sock"
+    name: "{{ db_wp_name }}"
+    state: present
+  when: (ansible_facts['os_family'] == "Debian")
+
+- name: Creating user with password, all database privileges in database - Debian
+  mysql_user:
+    login_unix_socket: "/var/run/mysqld/mysqld.sock"
+    name: "{{ db_wp_name }}"
+    password: "{{ db_wp_password }}"
+    priv: "{{ db_wp_name }}.*:ALL,GRANT"
+    state: present
+  when: (ansible_facts['os_family'] == "Debian")
+
+- name: Creating user with password, all database privileges in database - RedHat
+  mysql_user:
+    name: "{{ db_wp_name }}"
+    password: "{{ db_wp_password }}"
+    priv: "{{ db_wp_name }}.*:ALL,GRANT"
+    state: present
+    login_user: root
+    login_unix_socket: /var/lib/mysql/mysql.sock
+  when: (ansible_facts['os_family'] == "RedHat")
+

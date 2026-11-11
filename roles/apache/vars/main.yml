@@ -1,0 +1,7 @@
+---
+site_folder: "/var/www/breno_local"
+site_url: "www.breno.local"
+site_domain: "breno.local"
+log_prefix: "breno-local"
+php_version: "8.5"
+

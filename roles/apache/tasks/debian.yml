@@ -1,0 +1,44 @@
+---
+- name: "Install Apache in Systems Operationals derivative of Debian"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - apache2
+      - openssl
+    state: present
+  become: true
+  when: ansible_facts['os_family'] == "Debian"
+  notify:
+    - enableApache2
+
+- name: "Enabling mods in apache2 - Debian"
+  apache2_module:
+    name: "{{ item }}"
+  with_items:
+    - actions
+    - fcgid
+    - alias
+    - proxy_fcgi
+    - headers
+    - ssl
+  when: (ansible_facts['os_family'] == "Debian")
+
+- name: "Create virtual host with site configs - Debian"
+  template:
+    src: templates/site.conf
+    dest: /etc/apache2/sites-available/{{ log_prefix }}.conf
+  when: (ansible_facts['os_family'] == "Debian")
+  notify:
+    - enableSite
+    - reloadApache2
+    - addInHostsFile
+
+- name: "Disable Apache default site - Debian"
+  ansible.builtin.command: a2dissite 000-default
+  args:
+    removes: /etc/apache2/sites-enabled/000-default.conf
+  become: true
+  when: (ansible_facts['os_family'] == "Debian")
+  notify:
+    - reloadApache2

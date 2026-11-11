@@ -1,0 +1,20 @@
+---
+- name: Include redhat.yml
+  include_tasks: redhat.yml
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: Include debian.yml
+  include_tasks: debian.yml
+  when: (ansible_facts['os_family'] == "Debian")
+
+
+- name: "creating the directory that will host the website files"
+  file:
+    path: "{{ site_folder }}"
+    state: directory
+    mode: '0755'
+
+- name: "Copy simple file index.html"
+  copy:
+    src: index.html
+    dest: "{{ site_folder }}"

@@ -1,0 +1,56 @@
+---
+# tasks file for serverTools
+
+- name: Debug hostname
+  ansible.builtin.debug:
+    msg: "IP: {{ inventory_hostname }} | Hostname: {{ hostname }}"  
+
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+  notify:
+    - addInHostsFile
+
+- name: 'Role: serverTools -> Utility  Softwares to SysAdmin - Debian'
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600 # One hour
+    name:
+      - vim
+      - iftop
+      - zip
+      - wget
+      - curl
+      - python3
+    state: latest
+  when: (ansible_facts['os_family'] == "Debian")
+
+- name: "Role: serverTools -> Utility Softwares to SysAdmin = CentOS"
+  yum:
+    update_cache: yes
+    name:
+      - vim
+      - zip
+      - wget
+      - curl
+      - python3
+      - yum-utils
+    state: latest
+  when: (ansible_facts['os_family'] == "RedHat")
+  notify:
+  - enable yum-utils
+
+- name: "Config Traffic HTTP on Firewalld of Rocky and CentOS"
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: "Disable SELinux in Systems derived RedHat"
+  selinux:
+    state: disabled
+  when: (ansible_facts['os_family'] == "RedHat")
+  notify:
+  - Restart Server
+      

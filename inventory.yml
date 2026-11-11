@@ -1,0 +1,8 @@
+---
+all:
+  hosts:
+    192.168.81.137:
+      hostname: "srv-ubuntu-01"
+
+    192.168.81.144:
+      hostname: "srv-rocky-01"

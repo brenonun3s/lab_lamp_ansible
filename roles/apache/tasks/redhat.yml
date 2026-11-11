@@ -1,0 +1,22 @@
+- name: "Install archive dependencies"
+  ansible.builtin.dnf:
+    name:
+      - tar
+      - gzip
+    state: present
+  become: true
+
+- name: "Create web directory"
+  ansible.builtin.file:
+    path: "{{ site_folder }}"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: "Install WordPress"
+  ansible.builtin.unarchive:
+    src: https://wordpress.org/latest.tar.gz
+    dest: "{{ site_folder }}"
+    remote_src: true
+    creates: "{{ site_folder }}/wordpress/wp-includes/version.php"
+  become: true

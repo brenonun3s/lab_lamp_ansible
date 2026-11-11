@@ -1,0 +1,43 @@
+
+---
+# tasks file for php
+
+- name: "Install PHP in Debian"
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    name:
+      - php
+      - php-fpm
+      - php-cli
+      - php-common
+      - php-curl
+      - php-mbstring
+      - php-mysql
+      - php-xml
+      - php-gd
+      - php-exif
+    state: present
+  become: true
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: "Install PHP in Rocky Linux 9"
+  ansible.builtin.dnf:
+    name:
+      - php
+      - php-mysqlnd
+      - php-cli
+      - php-common
+      - php-fpm
+      - php-curl
+      - php-mbstring
+      - php-xml
+      - php-gd
+      - php-opcache
+    state: present
+  become: true
+  when:
+    - ansible_facts['os_family'] == "RedHat"
+    - ansible_facts['distribution_major_version'] == "9"
+  notify:
+    - RestartHttpd

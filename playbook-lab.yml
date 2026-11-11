@@ -1,0 +1,60 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    default_dir: /opt/custom
+    test: "{{ default_dir }}/tests"
+    dict_dir: {
+      scripts: "{{ default_dir }}/scripts",
+      backups: "{{ default_dir }}/backups",
+      logs: "{{ default_dir }}/logs",
+      codes: "{{ default_dir }}/codes"
+    }
+
+  tasks:
+  - name: "Install wget package on Rocky Linux"
+    dnf:
+      update_cache: yes
+      name: "wget"
+      state: present
+    when: (ansible_facts['distribution'] == "Rocky")
+
+  - name: "Set hostname servers"
+    hostname:
+      name: "{{ nameserver }}"
+
+  - name: "Create default directories on servers"
+    file:
+      path: "{{ item }}"
+      owner: admin
+      group: admin
+      state: directory
+    with_items:
+    - "{{ dict_dir.scripts}}"
+    - "{{ dict_dir.backups}}"
+    - "{{ dict_dir.logs}}"
+    - "{{ dict_dir.codes}}"
+
+  - name: "Create simple file "
+    file:
+      path: "{{ default_dir }}/test.py"
+      state: touch
+      owner: admin
+      group: admin
+      mode: 0755
+      modification_time: preserve
+      access_time: preserve
+
+  - name: "Example of debugging"
+    debug:
+      msg: "{{ test }}"
+
+  - name: "Example of Register"
+    shell: "date -u"
+    register: linux_date
+
+  - name: "Showing register"
+    debug:
+     msg: "{{ linux_date }}"

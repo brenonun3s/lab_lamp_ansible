@@ -1,0 +1,73 @@
+---
+- name: "enableApache2"
+  ansible.builtin.service:
+    name: apache2
+    enabled: true
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: "addInHostsFile"
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ ansible_host }} {{ item }}"
+    create: true
+  loop:
+    - "{{ site_url }}"
+    - "{{ site_domain }}"
+  become: true
+
+- name: "addInHttpdFile"
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    line: "IncludeOptional conf.d/*.conf"
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+  become: true
+
+- name: "RestartHttpd"
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+  when: ansible_facts['os_family'] == "RedHat"
+  become: true
+
+- name: "SetPermissionWp-CentOS"
+  ansible.builtin.file:
+    path: "{{ site_folder }}/wordpress"
+    state: directory
+    owner: apache
+    group: apache
+    recurse: true
+  when: ansible_facts['os_family'] == "RedHat"
+  become: true
+
+- name: "SetPermissionWp-Debian"
+  ansible.builtin.file:
+    path: "{{ site_folder }}/wordpress"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: true
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
+
+- name: "enableHttpd"
+  ansible.builtin.service:
+    name: httpd
+    enabled: true
+  when: ansible_facts['os_family'] == "RedHat"
+  become: true
+
+- name: "enableSite"
+  ansible.builtin.command: a2ensite {{ log_prefix }}
+  args:
+    creates: /etc/apache2/sites-enabled/{{ log_prefix }}.conf
+  become: true
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: "reloadApache2"
+  ansible.builtin.service:
+    name: apache2
+    state: reloaded
+    enabled: true
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
