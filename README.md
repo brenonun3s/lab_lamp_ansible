@@ -3,7 +3,7 @@
 Laboratório de estudos em que um **Control Node** com Ansible configura, por SSH, dois servidores de distribuições diferentes (**Ubuntu Server** e **Rocky Linux**) com Apache, PHP, MariaDB e WordPress, usando as mesmas roles.
 
 <p align="center">
-  <img src="docs/images/arquitetura-lab-ansible.png" alt="Arquitetura do laboratório: Control Node com Ansible conectado por SSH a dois Managed Nodes, Ubuntu e Rocky Linux, com PHP, WordPress e MariaDB" width="800">
+  <img src="docs/images/architecture-lab-ansible.png" alt="Arquitetura do laboratório: Control Node com Ansible conectado por SSH a dois Managed Nodes, Ubuntu e Rocky Linux, com PHP, WordPress e MariaDB" width="800">
 </p>
 
 | Função | Sistema operacional | Endereço IP |
